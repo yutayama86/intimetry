@@ -40,10 +40,10 @@ npm run dev
 - [x] 正式ブランド名をINTIMETRYで進行
 - [x] `intimetry.com` 取得
 - [x] コード上の `PUBLIC_SITE_URL` 既定値を `https://intimetry.com` に設定
-- [ ] Cloudflare Pagesプロジェクト作成・GitHub連携
+- [x] Cloudflare Pagesプロジェクト作成・GitHub連携
 - [ ] Pages Functionsの環境変数設定
-- [ ] Turnstile作成・Site Key / Secret Key設定
-- [ ] Resend送信元ドメイン認証
+- [x] Turnstile作成・Site Key / Secret Key設定
+- [x] Resend送信元ドメイン認証
 - [ ] GA4プロパティ作成・`PUBLIC_GA4_ID`設定
 - [ ] Google Search Console登録・sitemap送信
 - [ ] 本番フォーム送信テスト
@@ -51,18 +51,20 @@ npm run dev
 
 ## Cloudflare Pages環境変数
 
-### Build time
+Cloudflareダッシュボードを設定の正本とする。Wrangler設定ファイルは置かない。
+
+### テキスト変数
 - `PUBLIC_SITE_URL=https://intimetry.com`
 - `PUBLIC_GA4_ID`
 - `PUBLIC_TURNSTILE_SITE_KEY`
+- `CONTACT_FROM=INTIMETRY <noreply@intimetry.com>`
+- `ALLOWED_ORIGINS=https://intimetry.com`
 
-### Runtime secrets / variables
+### シークレット
 - `RESEND_API_KEY`
 - `CONTACT_TO`
 - `CONSULT_TO`
-- `CONTACT_FROM`
 - `TURNSTILE_SECRET_KEY`
-- `ALLOWED_ORIGINS=https://intimetry.com,https://www.intimetry.com`
 
 ## GA4イベント
 
