@@ -46,8 +46,8 @@ npm run dev
 - [x] Resend送信元ドメイン認証
 - [ ] GA4プロパティ作成・`PUBLIC_GA4_ID`設定
 - [ ] Google Search Console登録・sitemap送信
-- [ ] 本番フォーム送信テスト
-- [ ] 公開後QA
+- [x] 本番フォーム送信テスト
+- [ ] 公開後QA（自動QA強化済み・CI確認中）
 
 ## Cloudflare Pages環境変数
 
