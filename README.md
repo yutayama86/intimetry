@@ -45,9 +45,10 @@ npm run dev
 - [x] Turnstile作成・Site Key / Secret Key設定
 - [x] Resend送信元ドメイン認証
 - [ ] GA4プロパティ作成・`PUBLIC_GA4_ID`設定
+- [x] sitemap生成・robots.txt参照
 - [ ] Google Search Console登録・sitemap送信
 - [x] 本番フォーム送信テスト
-- [ ] 公開後QA（自動QA強化済み・CI確認中）
+- [x] 公開後QA（自動QA・CI・本番フォーム送受信確認）
 
 ## Cloudflare Pages環境変数
 
