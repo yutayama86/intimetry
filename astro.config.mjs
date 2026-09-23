@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-const SITE = process.env.PUBLIC_SITE_URL || 'https://intimetry.example';
+const SITE = process.env.PUBLIC_SITE_URL || 'https://intimetry.com';
 
 export default defineConfig({
   site: SITE,

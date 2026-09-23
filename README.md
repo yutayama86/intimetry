@@ -2,6 +2,12 @@
 
 「性生活を、もっと豊かに。」をミッションに、18歳以上向けの欲求MAP・匿名相談・情報提供を行うMVPです。
 
+## 本番ドメイン
+
+- https://intimetry.com
+- Registrar / DNS: Cloudflare
+- Hosting: Cloudflare Pages
+
 ## 方針
 
 - 成人向けMBTI/16タイプ診断とは競争しない
@@ -29,23 +35,24 @@ npm install
 npm run dev
 ```
 
-## 公開前の必須設定
+## 公開前チェック
 
-1. 正式ブランド名を確定する
-2. 独自ドメインを取得する（課金前に確認）
-3. `PUBLIC_SITE_URL` を本番URLに設定する
-4. Cloudflare Pagesプロジェクトを作成する
-5. Pages Functionsの環境変数を設定する
-6. Turnstileを作成しSite Key / Secret Keyを設定する
-7. Resendで送信元ドメインを認証する
-8. GA4プロパティを作成し`PUBLIC_GA4_ID`を設定する
-9. Google Search ConsoleでドメインまたはURLプレフィックスを登録し、sitemapを送信する
-10. プライバシー・利用規約・広告方針・匿名相談運用を公開前に最終レビューする
+- [x] 正式ブランド名をINTIMETRYで進行
+- [x] `intimetry.com` 取得
+- [x] コード上の `PUBLIC_SITE_URL` 既定値を `https://intimetry.com` に設定
+- [ ] Cloudflare Pagesプロジェクト作成・GitHub連携
+- [ ] Pages Functionsの環境変数設定
+- [ ] Turnstile作成・Site Key / Secret Key設定
+- [ ] Resend送信元ドメイン認証
+- [ ] GA4プロパティ作成・`PUBLIC_GA4_ID`設定
+- [ ] Google Search Console登録・sitemap送信
+- [ ] 本番フォーム送信テスト
+- [ ] 公開後QA
 
 ## Cloudflare Pages環境変数
 
 ### Build time
-- `PUBLIC_SITE_URL`
+- `PUBLIC_SITE_URL=https://intimetry.com`
 - `PUBLIC_GA4_ID`
 - `PUBLIC_TURNSTILE_SITE_KEY`
 
@@ -55,7 +62,7 @@ npm run dev
 - `CONSULT_TO`
 - `CONTACT_FROM`
 - `TURNSTILE_SECRET_KEY`
-- `ALLOWED_ORIGINS`（カンマ区切り。例 `https://example.com,https://www.example.com`）
+- `ALLOWED_ORIGINS=https://intimetry.com,https://www.intimetry.com`
 
 ## GA4イベント
 
