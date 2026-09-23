@@ -1,0 +1,27 @@
+{
+  "name": "intimetry",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "INTIMETRY - 性生活を豊かにする欲求MAP・匿名相談MVP",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "check": "astro check",
+    "check:functions": "tsc --noEmit --strict --lib ES2022,DOM --module ESNext --moduleResolution bundler --target ES2022 functions/api/contact.ts functions/api/consult.ts",
+    "verify": "npm run test && npm run check && npm run check:functions && npm run build && node scripts/quality-check.mjs",
+    "preview": "astro preview",
+    "deploy": "npm run verify && wrangler pages deploy dist --project-name=intimetry --branch=main",
+    "test": "node --experimental-strip-types scripts/scoring-smoke.ts"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "3.7.4",
+    "astro": "7.3.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "typescript": "5.9.3",
+    "wrangler": "4.135.0"
+  }
+}
