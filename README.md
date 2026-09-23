@@ -41,7 +41,7 @@ npm run dev
 - [x] `intimetry.com` 取得
 - [x] コード上の `PUBLIC_SITE_URL` 既定値を `https://intimetry.com` に設定
 - [x] Cloudflare Pagesプロジェクト作成・GitHub連携
-- [ ] Pages Functionsの環境変数設定
+- [x] Pages Functionsの環境変数設定
 - [x] Turnstile作成・Site Key / Secret Key設定
 - [x] Resend送信元ドメイン認証
 - [ ] GA4プロパティ作成・`PUBLIC_GA4_ID`設定
