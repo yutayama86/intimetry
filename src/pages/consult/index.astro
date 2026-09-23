@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+---
+<BaseLayout title="性・パートナーの匿名相談" description="セックスレス、性欲差、マンネリ、誘い方、性的な好みなど、人に言いづらい性生活・パートナー関係の悩みを18歳以上の方から匿名で受け付けます。">
+<section class="section"><div class="container consult-grid">
+  <div class="intro-copy"><span class="eyebrow">Anonymous consult / 18+</span><h1 class="h2">人に言いづらいことを、<br />ここでは言葉にしていい。</h1><p class="lead">セックスレス、性欲差、マンネリ、誘い方、性的な好み、パートナーとのすれ違い。答えが出ていなくても、そのまま送ってください。</p>
+  <div class="notice"><strong>この相談窓口でできること</strong><br />悩みの整理、一般的な情報提供、コミュニケーションの選択肢の提示、必要に応じた専門家・医療機関等の案内です。診断・治療・緊急対応は行いません。</div>
+  <div class="mini-cards"><div><b>匿名OK</b><span>ニックネーム・メールは任意です。</span></div><div><b>公開は選べる</b><span>相談事例として匿名掲載してよいか、自分で選択できます。</span></div><div><b>診断データと分離</b><span>欲求MAPの個別回答とは紐付けません。</span></div></div></div>
+  <form id="consult-form" class="card consult-form">
+    <div class="field"><label for="category">相談カテゴリ *</label><select id="category" name="category" required><option value="">選択してください</option><option value="sexless">セックスレス</option><option value="libido-gap">性欲差</option><option value="boredom">マンネリ</option><option value="initiation">誘い方・断られ方</option><option value="preferences">性的な好み・伝え方</option><option value="body">身体に関する悩み</option><option value="relationship">出会い・パートナー関係</option><option value="other">その他</option></select></div>
+    <div class="field"><label for="nickname">ニックネーム <small>任意</small></label><input id="nickname" name="nickname" maxlength="50" autocomplete="nickname" placeholder="例：30代会社員" /></div>
+    <div class="field"><label for="email">返信用メール <small>任意</small></label><input id="email" name="email" type="email" maxlength="254" autocomplete="email" placeholder="個別返信を希望する場合のみ" /></div>
+    <div class="field"><label for="message">相談内容 *</label><textarea id="message" name="message" maxlength="5000" required placeholder="状況・困っていること・どうなれば少し楽になれそうか等、書ける範囲で大丈夫です。"></textarea></div>
+    <fieldset class="choice-field"><legend>匿名の相談事例として掲載してもよいですか？ *</legend><label><input type="radio" name="publishConsent" value="no" required checked /> 掲載しない</label><label><input type="radio" name="publishConsent" value="yes" required /> 個人が特定されないよう編集・匿名化した上で掲載してよい</label></fieldset>
+    <label class="agree"><input type="checkbox" name="adult" value="yes" required /> <span>18歳以上です</span></label>
+    <label class="agree"><input type="checkbox" name="agree" value="yes" required /> <span><a href="/privacy/" target="_blank">プライバシーポリシー</a>と<a href="/terms/" target="_blank">利用規約</a>に同意します</span></label>
+    <div class="honeypot" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off" /></label></div>
+    {turnstileSiteKey ? <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-action="consult"></div> : <p class="setup-note">公開前にCloudflare TurnstileのSite Keyを設定してください。</p>}
+    <button class="btn primary" type="submit">匿名相談を送る</button><p id="consult-status" aria-live="polite"></p>
+    <p class="microcopy">氏名、住所、勤務先、相手の実名など、相談に不要な個人情報は入力しないでください。</p>
+  </form>
+</div></section>
+<section class="section safety-section"><div class="container prose"><h2>相談の範囲について</h2><p>身体症状、ED、性交痛、性感染症、妊娠・避妊、薬の使用など、診断・治療が必要な内容は医療機関へご相談ください。暴力、脅迫、同意のない性的行為など、あなたや相手の安全に関わる状況では、本サービスからの回答を待たず、地域の公的相談窓口・警察・医療機関等を利用してください。</p></div></section>
+{turnstileSiteKey && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+</BaseLayout>
+<script>
+import { track } from '../../lib/analytics';
+const form=document.querySelector<HTMLFormElement>('#consult-form')!,status=document.querySelector<HTMLElement>('#consult-status')!;
+form.addEventListener('submit',async(event)=>{event.preventDefault();status.textContent='送信中…';const data=new FormData(form),body=new URLSearchParams();data.forEach((value,key)=>{if(typeof value==='string')body.set(key,value);});try{const response=await fetch('/api/consult',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});const result=await response.json().catch(()=>({}));if(!response.ok)throw new Error(result.message||'送信に失敗しました');form.reset();const no=form.querySelector<HTMLInputElement>('input[name="publishConsent"][value="no"]');if(no)no.checked=true;status.textContent='送信しました。相談してくれてありがとうございます。';track('consult_submit',{category:String(data.get('category')||'unknown')});(window as Window&{turnstile?:{reset:()=>void}}).turnstile?.reset();}catch(error){status.textContent=error instanceof Error?error.message:'送信に失敗しました。';}});
+</script>
+<style>
+.consult-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:42px;align-items:start}.intro-copy{position:sticky;top:100px}.mini-cards{display:grid;gap:10px;margin-top:24px}.mini-cards>div{display:grid;gap:2px;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}.mini-cards span{color:var(--muted);font-size:.88rem}.consult-form{display:grid;gap:20px}.choice-field{display:grid;gap:10px;border:1px solid var(--line);border-radius:14px;padding:16px}.choice-field legend{padding:0 8px;font-weight:800}.choice-field label,.agree{display:flex;align-items:flex-start;gap:9px}.honeypot{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}.setup-note{color:var(--danger);font-size:.86rem}#consult-status{min-height:1.5em;color:var(--muted)}.microcopy{color:var(--muted);font-size:.8rem;margin:0}.safety-section{border-top:1px solid var(--line)}@media(max-width:860px){.consult-grid{grid-template-columns:1fr}.intro-copy{position:static}}
+</style>

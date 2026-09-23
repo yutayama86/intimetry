@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ScoreBar from '../../components/ScoreBar.astro';
+import { DIMENSIONS, QUESTIONS } from '../../data/questions';
+
+const sections = Array.from({ length: 4 }, (_, i) => QUESTIONS.slice(i * 6, i * 6 + 6));
+const preferenceEntries = Object.entries(DIMENSIONS).filter(([, v]) => v.kind === 'preference');
+const stateEntries = Object.entries(DIMENSIONS).filter(([, v]) => v.kind === 'state');
+---
+<BaseLayout title="欲求MAPセルフチェック" description="約3分で、欲求・親密性・関係の現在地を可視化する18歳以上向けセルフチェック。">
+  <section class="section check-wrap">
+    <div class="container narrow">
+      <div id="intro" class="card intro">
+        <span class="eyebrow">SOLO MAP / 18+</span>
+        <h1 class="h2">欲求MAPセルフチェック</h1>
+        <p class="lead">24問に直感で答えてください。正解・不正解はありません。</p>
+        <div class="notice">これは医学的・心理学的診断ではなく、自己理解のためのセルフチェックです。MVPでは回答内容をサーバーに保存しません。</div>
+        <button id="start" class="btn primary" type="button">チェックを始める</button>
+      </div>
+
+      <form id="check-form" hidden novalidate>
+        <div class="progress" aria-label="進捗"><span id="progress-bar"></span></div>
+        <p id="progress-label" class="progress-label" aria-live="polite"></p>
+        {sections.map((group, sectionIndex) => (
+          <fieldset class="question-section card" data-section={sectionIndex} hidden={sectionIndex !== 0}>
+            <legend>Part {sectionIndex + 1}</legend>
+            {group.map((q, index) => (
+              <div class="question" data-question={q.id}>
+                <p class="q-number">Q{sectionIndex * 6 + index + 1}</p>
+                <h2>{q.text}</h2>
+                <div class="scale" role="radiogroup" aria-label={q.text}>
+                  {[[1,'まったく違う'],[2,'やや違う'],[3,'どちらともいえない'],[4,'やや当てはまる'],[5,'とても当てはまる']].map(([value,label]) => (
+                    <label><input type="radio" name={q.id} value={String(value)} required /><span><b>{value}</b><small>{label}</small></span></label>
+                  ))}
+                </div>
+              </div>
+            ))}
+            <div class="step-actions">
+              <button class="btn back" type="button" data-back hidden={sectionIndex === 0}>戻る</button>
+              {sectionIndex < sections.length - 1 ? <button class="btn primary next" type="button" data-next>次へ</button> : <button class="btn primary" type="submit">結果を見る</button>}
+            </div>
+            <p class="form-error" aria-live="polite"></p>
+          </fieldset>
+        ))}
+      </form>
+
+      <section id="result" class="result" hidden aria-live="polite">
+        <div class="card result-hero">
+          <span class="eyebrow">YOUR CURRENT MAP</span><h1 id="result-title" class="h2">あなたのMAP</h1>
+          <p id="result-summary" class="lead"></p>
+          <p class="muted">結果は「今の傾向」です。固定的な性格や正常・異常を判定するものではありません。</p>
+          <div class="result-actions"><button id="share" class="btn primary" type="button">結果ページをシェア</button><button id="retry" class="btn" type="button">もう一度チェック</button></div>
+        </div>
+        <div class="result-grid">
+          <div class="card"><span class="eyebrow">PREFERENCE</span><h2>欲求の傾向</h2><div class="bars">{preferenceEntries.map(([id,d]) => <ScoreBar id={id} label={d.label} kind="preference" />)}</div></div>
+          <div class="card"><span class="eyebrow">NOW</span><h2>今の状態</h2><div class="bars">{stateEntries.map(([id,d]) => <ScoreBar id={id} label={d.label} kind="state" />)}</div></div>
+        </div>
+        <div class="card recommendation-wrap"><span class="eyebrow">NEXT ACTION</span><h2>今のあなたに合う、小さな次の一歩</h2><div id="recommendations" class="recommendations"></div></div>
+        <div class="notice privacy-note">この結果画面の作成に使った回答値は、このMVPではサーバーへ送信していません。アクセス解析にも個別回答・個別スコアは送信しません。</div>
+      </section>
+    </div>
+  </section>
+  <script type="application/json" id="question-data" set:html={JSON.stringify(QUESTIONS)}></script>
+  <script type="application/json" id="dimension-data" set:html={JSON.stringify(DIMENSIONS)}></script>
+</BaseLayout>
+
+<script>
+import { track } from '../../lib/analytics';
+import { calculateScores, buildRecommendations, preferenceSummary } from '../../lib/scoring';
+type Dimension='novelty'|'intimacy'|'initiative'|'desired'|'openness'|'satisfaction'|'boredom'|'intensity';
+type Question={id:string;text:string;dimension:Dimension;reverse?:boolean};
+type DimensionMeta=Record<Dimension,{label:string;short:string;kind:'preference'|'state'}>;
+const QUESTIONS:Question[]=JSON.parse(document.querySelector<HTMLScriptElement>('#question-data')?.textContent||'[]');
+const DIMENSIONS:DimensionMeta=JSON.parse(document.querySelector<HTMLScriptElement>('#dimension-data')?.textContent||'{}');
+const intro=document.querySelector<HTMLElement>('#intro')!,start=document.querySelector<HTMLButtonElement>('#start')!,form=document.querySelector<HTMLFormElement>('#check-form')!,result=document.querySelector<HTMLElement>('#result')!;
+const sections=[...document.querySelectorAll<HTMLElement>('[data-section]')],progressBar=document.querySelector<HTMLElement>('#progress-bar')!,progressLabel=document.querySelector<HTMLElement>('#progress-label')!;
+const resultTitle=document.querySelector<HTMLElement>('#result-title')!,resultSummary=document.querySelector<HTMLElement>('#result-summary')!,recommendations=document.querySelector<HTMLElement>('#recommendations')!,share=document.querySelector<HTMLButtonElement>('#share')!,retry=document.querySelector<HTMLButtonElement>('#retry')!;
+let current=0,started=false;
+const showSection=(index:number)=>{current=index;sections.forEach((s,i)=>s.hidden=i!==index);progressBar.style.width=`${Math.round((index/sections.length)*100)}%`;progressLabel.textContent=`Part ${index+1} / ${sections.length}`;window.scrollTo({top:0,behavior:'smooth'});};
+const validateSection=(section:HTMLElement)=>{const names=[...section.querySelectorAll<HTMLInputElement>('input[type="radio"]')].map(el=>el.name);const missing=[...new Set(names)].some(name=>!form.querySelector(`input[name="${name}"]:checked`));section.querySelector<HTMLElement>('.form-error')!.textContent=missing?'このPartのすべての質問に回答してください。':'';return !missing;};
+start.addEventListener('click',()=>{intro.hidden=true;form.hidden=false;showSection(0);if(!started){track('diagnosis_start',{version:'mvp_01'});started=true;}});
+document.querySelectorAll<HTMLButtonElement>('[data-next]').forEach(b=>b.addEventListener('click',()=>{if(validateSection(sections[current]))showSection(Math.min(current+1,sections.length-1));}));
+document.querySelectorAll<HTMLButtonElement>('[data-back]').forEach(b=>b.addEventListener('click',()=>showSection(Math.max(current-1,0))));
+const collectAnswers=()=>{const answers:Record<string,number>={};for(const q of QUESTIONS){const selected=form.querySelector<HTMLInputElement>(`input[name="${q.id}"]:checked`);if(selected)answers[q.id]=Number(selected.value);}return answers;};
+const render=(scores:Record<Dimension,number>)=>{(Object.keys(scores) as Dimension[]).forEach(id=>{const row=document.querySelector<HTMLElement>(`[data-score-row="${id}"]`);if(!row)return;row.querySelector<HTMLElement>('[data-score-value]')!.textContent=String(scores[id]);row.querySelector<HTMLElement>('[data-score-fill]')!.style.width=`${scores[id]}%`;});resultTitle.textContent='今のあなたの欲求MAP';resultSummary.textContent=preferenceSummary(scores,DIMENSIONS);recommendations.innerHTML='';buildRecommendations(scores).forEach(rec=>{const article=document.createElement('article');article.className='rec-card';article.innerHTML=`<h3>${rec.title}</h3><p>${rec.body}</p><a href="/articles/" data-rec="${rec.id}">関連する読みものを見る →</a>`;recommendations.append(article);});recommendations.querySelectorAll<HTMLAnchorElement>('[data-rec]').forEach(a=>a.addEventListener('click',()=>track('recommendation_click',{recommendation_id:a.dataset.rec||'unknown'})));};
+form.addEventListener('submit',e=>{e.preventDefault();if(!validateSection(sections[current]))return;render(calculateScores(QUESTIONS,collectAnswers()));form.hidden=true;result.hidden=false;progressBar.style.width='100%';track('diagnosis_complete',{version:'mvp_01',question_count:QUESTIONS.length});window.scrollTo({top:0,behavior:'smooth'});});
+share.addEventListener('click',async()=>{const data={title:'INTIMETRY｜欲求MAPセルフチェック',text:'自分が今なにを求めているのか、欲求MAPをチェックしてみました。',url:`${location.origin}/check/`};const nav=navigator as unknown as {share?: (data:ShareData)=>Promise<void>;clipboard:Clipboard};const canNativeShare=typeof nav.share==='function';try{if(canNativeShare)await nav.share!(data);else await nav.clipboard.writeText(`${data.text} ${data.url}`);track('result_share',{method:canNativeShare?'web_share':'clipboard'});}catch{}});
+retry.addEventListener('click',()=>{form.reset();result.hidden=true;form.hidden=false;showSection(0);});
+</script>
+
+<style>
+.narrow{max-width:880px}.intro{display:grid;gap:20px}.intro .btn{justify-self:start}.progress{height:7px;background:var(--surface);border:1px solid var(--line);border-radius:999px;overflow:hidden;margin:0 0 8px}.progress span{display:block;height:100%;width:0;background:var(--accent);transition:width .3s ease}.progress-label{color:var(--muted);font-size:.82rem;text-align:right;margin:0 0 12px}fieldset{border:1px solid var(--line);margin:0}legend{padding:0 10px;color:var(--accent);font-weight:800}.question{padding:24px 0;border-bottom:1px solid var(--line)}.question:last-of-type{border-bottom:none}.q-number{color:var(--accent);font-size:.78rem;font-weight:900;letter-spacing:.08em}.question h2{font-size:clamp(1.05rem,3vw,1.35rem);line-height:1.45;margin:5px 0 15px}.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.scale label{cursor:pointer}.scale input{position:absolute;opacity:0;pointer-events:none}.scale span{min-height:68px;display:grid;place-items:center;gap:2px;text-align:center;border:1px solid var(--line);border-radius:12px;padding:8px 5px;color:var(--muted);background:#100d13}.scale b{color:var(--text)}.scale small{font-size:.65rem;line-height:1.2}.scale input:checked+span{border-color:var(--accent);background:#342234;color:var(--text);box-shadow:0 0 0 1px var(--accent) inset}.scale input:focus-visible+span{outline:2px solid var(--accent-2);outline-offset:2px}.step-actions,.result-actions{display:flex;justify-content:space-between;gap:10px;margin-top:24px;flex-wrap:wrap}.form-error{color:var(--danger);min-height:1.5em}.result{display:grid;gap:18px}.result-hero{display:grid;gap:14px}.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.bars{display:grid;gap:18px;margin-top:24px}.recommendations{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}:global(.rec-card){border:1px solid var(--line);border-radius:16px;padding:18px;background:#100d13}:global(.rec-card h3){margin:0 0 8px;font-size:1.05rem}:global(.rec-card p){color:var(--muted);font-size:.9rem}:global(.rec-card a){color:var(--accent-2);font-weight:800;font-size:.86rem;text-decoration:none}.privacy-note{margin-top:4px}@media(max-width:700px){.scale{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}.scale span{min-height:60px;padding:6px 2px}.scale small{display:none}.result-grid,.recommendations{grid-template-columns:1fr}}
+</style>

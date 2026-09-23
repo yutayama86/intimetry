@@ -1,0 +1,97 @@
+---
+import '../styles/global.css';
+import { SITE } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const { title = SITE.name, description = SITE.description, noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
+const ga4 = import.meta.env.PUBLIC_GA4_ID;
+const fullTitle = title === SITE.name ? `${SITE.name}｜${SITE.tagline}` : `${title}｜${SITE.name}`;
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: SITE.name,
+  applicationCategory: 'LifestyleApplication',
+  operatingSystem: 'Web',
+  description,
+  isAccessibleForFree: true,
+  url: canonical.origin,
+};
+---
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(schema)}></script>
+    {ga4 && (
+      <>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${ga4}`}></script>
+        <script is:inline define:vars={{ ga4 }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          window.gtag = gtag;
+          gtag('js', new Date());
+          gtag('config', ga4, { anonymize_ip: true });
+        </script>
+      </>
+    )}
+    <title>{fullTitle}</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="/">{SITE.name}</a>
+        <nav aria-label="主要ナビゲーション">
+          <a href="/check/">欲求MAP</a>
+          <a href="/consult/">匿名相談</a>
+          <a href="/articles/">読みもの</a>
+          <a href="/about/">About</a>
+        </nav>
+      </div>
+    </header>
+    <main><slot /></main>
+    <footer>
+      <div class="container footer-grid">
+        <div>
+          <strong>{SITE.name}</strong><br />
+          <span>{SITE.mission}</span>
+        </div>
+        <div class="footer-links">
+          <a href="/privacy/">プライバシー</a>
+          <a href="/terms/">利用規約</a>
+          <a href="/advertising/">広告・アフィリエイト方針</a>
+          <a href="/contact/">お問い合わせ</a>
+        </div>
+        <p class="age-note">18歳以上を対象とした性・関係性・ウェルビーイング情報サービスです。医学的・心理学的診断、診療、治療を提供するものではありません。</p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .site-header { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(16px); background: color-mix(in srgb, #0f0d12 78%, transparent); border-bottom: 1px solid color-mix(in srgb, #34293b 70%, transparent); }
+  .header-inner { min-height: 66px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+  .brand { font-weight: 950; letter-spacing: .08em; text-decoration: none; font-size: .95rem; }
+  nav { display: flex; gap: 20px; align-items: center; }
+  nav a, .footer-links a { text-decoration: none; color: var(--muted); font-size: .9rem; }
+  nav a:hover, .footer-links a:hover { color: var(--text); }
+  .footer-grid { display: grid; gap: 22px; }
+  .footer-links { display: flex; gap: 16px; flex-wrap: wrap; }
+  .age-note { font-size: .83rem; max-width: 760px; }
+  @media (max-width: 640px) { nav a:not(:first-child) { display: none; } }
+</style>
