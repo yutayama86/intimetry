@@ -1,0 +1,15 @@
+---
+interface Props { label: string; id: string; kind: 'preference' | 'state' }
+const { label, id, kind } = Astro.props;
+---
+<div class="score-row" data-score-row={id} data-kind={kind}>
+  <div class="score-head"><span>{label}</span><strong data-score-value>—</strong></div>
+  <div class="track"><span class="fill" data-score-fill></span></div>
+</div>
+<style>
+  .score-row { display: grid; gap: 8px; }
+  .score-head { display: flex; justify-content: space-between; gap: 20px; }
+  .score-head span { color: var(--muted); }
+  .track { height: 10px; background: #0d0b0f; border-radius: 999px; overflow: hidden; border: 1px solid var(--line); }
+  .fill { display: block; width: 0%; height: 100%; background: linear-gradient(90deg, #9b6e8e, #efd0e4); transition: width .55s ease; }
+</style>
