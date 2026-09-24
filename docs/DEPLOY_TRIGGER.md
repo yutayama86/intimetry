@@ -1,5 +1,5 @@
 # Deployment trigger
 
-Latest production redeploy trigger: 2026-09-24 22:30 JST
+Latest production redeploy trigger: 2026-09-25 00:49 JST
 
-This file exists only to create a safe main-branch commit that triggers the Cloudflare Pages Git integration.
+Reason: apply updated CONTACT_TO / CONSULT_TO / CONTACT_FROM Cloudflare Pages variables.
