@@ -44,7 +44,7 @@ npm run dev
 - [x] Pages Functionsの環境変数設定
 - [x] Turnstile作成・Site Key / Secret Key設定
 - [x] Resend送信元ドメイン認証
-- [ ] GA4プロパティ作成・`PUBLIC_GA4_ID`設定
+- [x] GA4プロパティ作成・測定ID `G-93GRSHCET0` 設定
 - [x] sitemap生成・robots.txt参照
 - [ ] Google Search Console登録・sitemap送信
 - [x] 本番フォーム送信テスト
@@ -56,9 +56,9 @@ Cloudflareダッシュボードを設定の正本とする。Wrangler設定フ�
 
 ### テキスト変数
 - `PUBLIC_SITE_URL=https://intimetry.com`
-- `PUBLIC_GA4_ID`
+- `PUBLIC_GA4_ID`（任意上書き。未設定時は `G-93GRSHCET0` を使用）
 - `PUBLIC_TURNSTILE_SITE_KEY`
-- `CONTACT_FROM=INTIMETRY <noreply@intimetry.com>`
+- `CONTACT_FROM=INTIMETRY <hello@intimetry.com>`
 - `ALLOWED_ORIGINS=https://intimetry.com`
 
 ### シークレット

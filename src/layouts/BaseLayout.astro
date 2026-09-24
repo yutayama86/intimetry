@@ -10,7 +10,7 @@ interface Props {
 
 const { title = SITE.name, description = SITE.description, noindex = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
-const ga4 = import.meta.env.PUBLIC_GA4_ID;
+const ga4 = import.meta.env.PUBLIC_GA4_ID || 'G-93GRSHCET0';
 const fullTitle = title === SITE.name ? `${SITE.name}｜${SITE.tagline}` : `${title}｜${SITE.name}`;
 const schema = {
   '@context': 'https://schema.org',

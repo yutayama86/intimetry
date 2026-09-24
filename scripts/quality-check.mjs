@@ -41,6 +41,8 @@ for (const path of htmlPages) {
 const index = read('dist/index.html');
 assert(index.includes('性生活を、もっと豊かに。'), 'Mission missing on home');
 assert(index.includes('欲求を、わかる言葉に。'), 'Tagline missing on home');
+assert(index.includes('G-93GRSHCET0'), 'GA4 measurement ID missing from production build');
+assert(index.includes('googletagmanager.com/gtag/js'), 'GA4 gtag loader missing from production build');
 
 const check = read('dist/check/index.html');
 assert(check.includes('欲求MAPセルフチェック'), 'Check page title missing');
