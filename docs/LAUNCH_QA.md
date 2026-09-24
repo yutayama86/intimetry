@@ -31,3 +31,8 @@
 - [ ] Search Console ownership verified
 - [ ] Search Console sitemap status = Success
 - [ ] Search Console first crawl/index coverage check
+
+## Mail production verification
+- [x] Resend -> さくらメール `consult@intimetry.com` 受信成功
+- [x] Resend -> さくらメール `contact@intimetry.com` 受信成功
+- [x] 外部メール -> `consult@intimetry.com` 受信成功
