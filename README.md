@@ -104,3 +104,13 @@ Cloudflareダッシュボードを設定の正本とする。Wrangler設定フ�
 - 法令・媒体規約を確認した上での商品/サービス送客
 
 ペア回答や履歴をサーバー保存する前に、データ最小化、保存期間、削除手段、暗号化、アクセス制御、プライバシーポリシー更新を実施します。
+
+## メール受信基盤
+
+- 受信: さくらインターネット
+- `hello@intimetry.com`: 一般窓口
+- `contact@intimetry.com`: 問い合わせ
+- `consult@intimetry.com`: 匿名相談
+- `noreply@intimetry.com`: システム用
+- Cloudflare DNS: MX / SPF / DKIM / DMARC 設定済み
+- Resend -> `contact@` / `consult@` の本番受信テスト成功
