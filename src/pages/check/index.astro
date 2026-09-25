@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ScoreBar from '../../components/ScoreBar.astro';
+import OrganicBlob from '../../components/OrganicBlob.astro';
 import { DIMENSIONS, QUESTIONS } from '../../data/questions';
 
 const sections = Array.from({ length: 4 }, (_, i) => QUESTIONS.slice(i * 6, i * 6 + 6));
@@ -11,6 +12,7 @@ const stateEntries = Object.entries(DIMENSIONS).filter(([, v]) => v.kind === 'st
   <section class="section check-wrap">
     <div class="container narrow">
       <div id="intro" class="card intro">
+        <OrganicBlob class="intro-blob" />
         <span class="eyebrow">SOLO MAP / 18+</span>
         <h1 class="h2">欲求MAPセルフチェック</h1>
         <p class="lead">24問に直感で答えてください。正解・不正解はありません。</p>
@@ -46,6 +48,7 @@ const stateEntries = Object.entries(DIMENSIONS).filter(([, v]) => v.kind === 'st
 
       <section id="result" class="result" hidden aria-live="polite">
         <div class="card result-hero">
+          <OrganicBlob class="result-blob" flip />
           <span class="eyebrow">YOUR CURRENT MAP</span><h1 id="result-title" class="h2">あなたのMAP</h1>
           <p id="result-summary" class="lead"></p>
           <p class="muted">結果は「今の傾向」です。固定的な性格や正常・異常を判定するものではありません。</p>
@@ -56,6 +59,12 @@ const stateEntries = Object.entries(DIMENSIONS).filter(([, v]) => v.kind === 'st
           <div class="card"><span class="eyebrow">NOW</span><h2>今の状態</h2><div class="bars">{stateEntries.map(([id,d]) => <ScoreBar id={id} label={d.label} kind="state" />)}</div></div>
         </div>
         <div class="card recommendation-wrap"><span class="eyebrow">NEXT ACTION</span><h2>今のあなたに合う、小さな次の一歩</h2><div id="recommendations" class="recommendations"></div></div>
+        <div class="card consult-nudge">
+          <span class="eyebrow">TALK</span>
+          <h2>言葉にしてみたいことがあれば</h2>
+          <p class="muted">MAPはあくまで今の傾向です。誰かに話したいこと、言いづらいことがあれば、匿名相談にそのまま送ってみてください。</p>
+          <a class="btn primary" href="/consult/">匿名相談へ</a>
+        </div>
         <div class="notice privacy-note">この結果画面の作成に使った回答値は、このMVPではサーバーへ送信していません。アクセス解析にも個別回答・個別スコアは送信しません。</div>
       </section>
     </div>
@@ -89,5 +98,5 @@ retry.addEventListener('click',()=>{form.reset();result.hidden=true;form.hidden=
 </script>
 
 <style>
-.narrow{max-width:880px}.intro{display:grid;gap:20px}.intro .btn{justify-self:start}.progress{height:7px;background:var(--surface);border:1px solid var(--line);border-radius:999px;overflow:hidden;margin:0 0 8px}.progress span{display:block;height:100%;width:0;background:var(--accent);transition:width .3s ease}.progress-label{color:var(--muted);font-size:.82rem;text-align:right;margin:0 0 12px}fieldset{border:1px solid var(--line);margin:0}legend{padding:0 10px;color:var(--accent);font-weight:800}.question{padding:24px 0;border-bottom:1px solid var(--line)}.question:last-of-type{border-bottom:none}.q-number{color:var(--accent);font-size:.78rem;font-weight:900;letter-spacing:.08em}.question h2{font-size:clamp(1.05rem,3vw,1.35rem);line-height:1.45;margin:5px 0 15px}.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.scale label{cursor:pointer}.scale input{position:absolute;opacity:0;pointer-events:none}.scale span{min-height:68px;display:grid;place-items:center;gap:2px;text-align:center;border:1px solid var(--line);border-radius:12px;padding:8px 5px;color:var(--muted);background:#100d13}.scale b{color:var(--text)}.scale small{font-size:.65rem;line-height:1.2}.scale input:checked+span{border-color:var(--accent);background:#342234;color:var(--text);box-shadow:0 0 0 1px var(--accent) inset}.scale input:focus-visible+span{outline:2px solid var(--accent-2);outline-offset:2px}.step-actions,.result-actions{display:flex;justify-content:space-between;gap:10px;margin-top:24px;flex-wrap:wrap}.form-error{color:var(--danger);min-height:1.5em}.result{display:grid;gap:18px}.result-hero{display:grid;gap:14px}.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.bars{display:grid;gap:18px;margin-top:24px}.recommendations{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}:global(.rec-card){border:1px solid var(--line);border-radius:16px;padding:18px;background:#100d13}:global(.rec-card h3){margin:0 0 8px;font-size:1.05rem}:global(.rec-card p){color:var(--muted);font-size:.9rem}:global(.rec-card a){color:var(--accent-2);font-weight:800;font-size:.86rem;text-decoration:none}.privacy-note{margin-top:4px}@media(max-width:700px){.scale{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}.scale span{min-height:60px;padding:6px 2px}.scale small{display:none}.result-grid,.recommendations{grid-template-columns:1fr}}
+.narrow{max-width:880px}.intro:not([hidden]){display:grid;gap:20px;position:relative;overflow:hidden;isolation:isolate}.intro .btn{justify-self:start}.intro :global(.intro-blob){z-index:-1;width:220px;height:220px;top:-70px;right:-60px}.consult-nudge:not([hidden]){display:grid;gap:12px}.consult-nudge .btn{justify-self:start}.progress{height:7px;background:var(--surface);border:1px solid var(--line);border-radius:999px;overflow:hidden;margin:0 0 8px}.progress span{display:block;height:100%;width:0;background:var(--accent);transition:width .3s ease}.progress-label{color:var(--muted);font-size:.82rem;text-align:right;margin:0 0 12px}fieldset{border:1px solid var(--line);margin:0}legend{padding:0 10px;color:var(--accent);font-weight:800}.question{padding:24px 0;border-bottom:1px solid var(--line)}.question:last-of-type{border-bottom:none}.q-number{color:var(--accent);font-size:.78rem;font-weight:900;letter-spacing:.08em}.question h2{font-size:clamp(1.05rem,3vw,1.35rem);line-height:1.45;margin:5px 0 15px}.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.scale label{cursor:pointer}.scale input{position:absolute;opacity:0;pointer-events:none}.scale span{min-height:68px;display:grid;place-items:center;gap:2px;text-align:center;border:1px solid var(--line);border-radius:12px;padding:8px 5px;color:var(--muted);background:#100d13}.scale b{color:var(--text)}.scale small{font-size:.65rem;line-height:1.2}.scale input:checked+span{border-color:var(--accent);background:#342234;color:var(--text);box-shadow:0 0 0 1px var(--accent) inset}.scale input:focus-visible+span{outline:2px solid var(--accent-2);outline-offset:2px}.step-actions,.result-actions{display:flex;justify-content:space-between;gap:10px;margin-top:24px;flex-wrap:wrap}.form-error{color:var(--danger);min-height:1.5em}.result:not([hidden]){display:grid;gap:18px}.result-hero{display:grid;gap:14px;position:relative;overflow:hidden;isolation:isolate}.result-hero :global(.result-blob){z-index:-1;width:240px;height:240px;bottom:-90px;left:-60px}.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.bars{display:grid;gap:18px;margin-top:24px}.recommendations{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}:global(.rec-card){border:1px solid var(--line);border-radius:16px;padding:18px;background:#100d13}:global(.rec-card h3){margin:0 0 8px;font-size:1.05rem}:global(.rec-card p){color:var(--muted);font-size:.9rem}:global(.rec-card a){color:var(--accent-2);font-weight:800;font-size:.86rem;text-decoration:none}.privacy-note{margin-top:4px}@media(max-width:700px){.scale{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}.scale span{min-height:64px;padding:6px 2px}.scale small{font-size:.56rem;line-height:1.05}.result-grid,.recommendations{grid-template-columns:1fr}}
 </style>

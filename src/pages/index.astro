@@ -1,9 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import OrganicBlob from '../components/OrganicBlob.astro';
 import { SITE } from '../data/site';
 ---
 <BaseLayout>
-  <section class="hero section"><div class="container">
+  <section class="hero section"><OrganicBlob class="hero-blob" /><div class="container">
     <span class="eyebrow">Sexual wellbeing / Relationship / 18+</span>
     <p class="mission">{SITE.mission}</p>
     <h1 class="h1">欲求を、<br />わかる言葉に。</h1>
@@ -19,7 +20,7 @@ import { SITE } from '../data/site';
       <article class="card"><span class="pill">EXPLORE</span><h3>選択肢を見つける</h3><p>読みもの、会話のヒント、体験、商品やサービスなど、状態に合う次の選択肢を増やしていきます。</p><a class="text-link" href="/articles/">読みものを見る →</a></article>
     </div>
   </div></section>
-  <section class="section philosophy"><div class="container">
+  <section class="section philosophy"><OrganicBlob class="philosophy-blob" flip /><div class="container">
     <span class="eyebrow">Our stance</span><h2 class="h2">回数や“普通”で、<br />性生活を採点しない。</h2>
     <p class="lead">欲求の強さ、頻度、好み、関係の形は人によって違います。INTIMETRYは正常・異常や良い・悪いを決めるのではなく、「自分は何を望んでいるのか」「相手とどこが違うのか」「次に何を試せるのか」を考える材料を提供します。</p>
   </div></section>
@@ -29,5 +30,5 @@ import { SITE } from '../data/site';
   </div></section>
 </BaseLayout>
 <style>
-.hero{min-height:78svh;display:grid;align-items:center}.mission{margin:18px 0 0;font-size:clamp(1.2rem,2.6vw,1.7rem);font-weight:900;letter-spacing:-.02em}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}.micro{margin-top:18px;color:var(--muted);font-size:.82rem}.card h3{font-size:1.3rem;margin:18px 0 8px}.card p{color:var(--muted)}.text-link{color:var(--accent-2);text-decoration:none;font-weight:800}.philosophy{border-block:1px solid var(--line);background:color-mix(in srgb,var(--surface) 65%,transparent)}.cta-card{display:grid;align-content:start;gap:14px}.cta-card .btn{justify-self:start;margin-top:8px}
+.hero{min-height:78svh;display:grid;align-items:center;position:relative;overflow:hidden;isolation:isolate}.hero :global(.hero-blob){z-index:-1;width:440px;height:440px;top:-140px;right:-100px}.mission{margin:18px 0 0;font-size:clamp(1.2rem,2.6vw,1.7rem);font-weight:900;letter-spacing:-.02em}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}.micro{margin-top:18px;color:var(--muted);font-size:.82rem}.card h3{font-size:1.3rem;margin:18px 0 8px}.card p{color:var(--muted)}.text-link{color:var(--accent-2);text-decoration:none;font-weight:800}.philosophy{border-block:1px solid var(--line);background:color-mix(in srgb,var(--surface) 65%,transparent);position:relative;overflow:hidden;isolation:isolate}.philosophy :global(.philosophy-blob){z-index:-1;width:340px;height:340px;bottom:-150px;left:-80px}.cta-card{display:grid;align-content:start;gap:14px}.cta-card .btn{justify-self:start;margin-top:8px}@media(max-width:700px){.hero :global(.hero-blob){width:280px;height:280px;top:-80px;right:-90px}.philosophy :global(.philosophy-blob){width:220px;height:220px;bottom:-100px;left:-70px}}
 </style>
