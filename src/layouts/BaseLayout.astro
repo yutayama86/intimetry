@@ -93,5 +93,9 @@ const schema = {
   .footer-grid { display: grid; gap: 22px; }
   .footer-links { display: flex; gap: 16px; flex-wrap: wrap; }
   .age-note { font-size: .83rem; max-width: 760px; }
-  @media (max-width: 640px) { nav a:not(:first-child) { display: none; } }
+  @media (max-width: 640px) {
+    .header-inner { flex-wrap: wrap; row-gap: 8px; }
+    nav { flex-wrap: wrap; gap: 14px; row-gap: 6px; }
+    nav a { font-size: .82rem; }
+  }
 </style>
