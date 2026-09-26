@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { ARTICLES } from '../../../data/articles';
+
+export function getStaticPaths() {
+  return ARTICLES.map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+---
+<BaseLayout title={article.title} description={article.description}>
+  <section class="section"><div class="container prose">
+    <span class="eyebrow">Journal</span>
+    <h1 class="h2">{article.title}</h1>
+    <p class="lead">{article.description}</p>
+    {article.blocks.map((block) => {
+      if (block.type === 'h2') return <h2>{block.text}</h2>;
+      if (block.type === 'ul') return <ul>{block.items.map((item) => <li>{item}</li>)}</ul>;
+      return <p>{block.text}</p>;
+    })}
+    <div class="notice cta-notice">
+      <strong>次の一歩</strong><br />
+      自分の傾向を知りたい方は<a href="/check/">欲求MAP</a>、話してみたい方は<a href="/consult/">匿名相談</a>をどうぞ。
+    </div>
+    <p class="back-link"><a href="/articles/">← 読みもの一覧へ</a></p>
+  </div></section>
+</BaseLayout>
+<style>
+  .cta-notice { margin-top: 40px; }
+  .cta-notice a { color: var(--accent-2); font-weight: 800; }
+  .back-link { margin-top: 24px; }
+  .back-link a { color: var(--muted); text-decoration: none; font-size: .9rem; }
+  .back-link a:hover { color: var(--text); }
+</style>

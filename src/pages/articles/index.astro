@@ -1,5 +1,5 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-const articles=[['欲求の強さが違う二人は、何から話せばいい？','「回数」だけで話さず、何が満たされると嬉しいかを分解する考え方。'],['マンネリと安心感は、同じではない','変化を増やす前に、残したい安心感と変えたい習慣を切り分けます。'],['「求められたい」を責めずに伝える','承認や愛情確認としての欲求を、相手への要求ではなく希望に翻訳する方法。']];
+import { ARTICLES } from '../../data/articles';
 ---
-<BaseLayout title="読みもの"><section class="section"><div class="container"><span class="eyebrow">Journal</span><h1 class="h2">自分と相手を理解する読みもの</h1><p class="lead">公開初期は、診断結果と匿名相談から必要性の高いテーマを優先して増やします。</p><div class="grid grid-3 article-grid">{articles.map(([title,description])=><article class="card"><span class="pill">準備中</span><h2>{title}</h2><p>{description}</p></article>)}</div></div></section></BaseLayout><style>.article-grid{margin-top:32px}.card h2{font-size:1.15rem}.card p{color:var(--muted)}</style>
+<BaseLayout title="読みもの" description="自分の欲求や、パートナーとの違いを理解するための読みもの。欲求MAPと匿名相談から見えてきたテーマを取り上げます。"><section class="section"><div class="container"><span class="eyebrow">Journal</span><h1 class="h2">自分と相手を理解する読みもの</h1><p class="lead">診断結果と匿名相談から、必要性の高いテーマを優先して増やしています。</p><div class="grid grid-3 article-grid">{ARTICLES.map((a)=><article class="card"><h2>{a.title}</h2><p>{a.description}</p><a class="text-link" href={`/articles/${a.slug}/`}>続きを読む →</a></article>)}</div></div></section></BaseLayout><style>.article-grid{margin-top:32px}.card{display:grid;align-content:start;gap:10px}.card h2{font-size:1.15rem;margin:0}.card p{color:var(--muted);margin:0}.text-link{color:var(--accent-2);text-decoration:none;font-weight:800;margin-top:4px}</style>
