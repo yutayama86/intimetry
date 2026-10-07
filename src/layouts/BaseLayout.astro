@@ -6,14 +6,15 @@ interface Props {
   title?: string;
   description?: string;
   noindex?: boolean;
+  schema?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { title = SITE.name, description = SITE.description, noindex = false } = Astro.props;
+const { title = SITE.name, description = SITE.description, noindex = false, schema: schemaOverride } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
 const ogImage = new URL('/ogp.png', canonical.origin);
 const ga4 = import.meta.env.PUBLIC_GA4_ID || 'G-93GRSHCET0';
 const fullTitle = title === SITE.name ? `${SITE.name}｜${SITE.tagline}` : `${title}｜${SITE.name}`;
-const schema = {
+const defaultSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
   name: SITE.name,
@@ -23,6 +24,7 @@ const schema = {
   isAccessibleForFree: true,
   url: canonical.origin,
 };
+const schema = schemaOverride ?? defaultSchema;
 ---
 <!doctype html>
 <html lang="ja">
