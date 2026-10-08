@@ -30,6 +30,10 @@ Keep the MVP centered on only two primary products unless the user explicitly as
 - Separate relatively stable **Preference** dimensions from temporary **NOW** state dimensions
 - Answers and individual scores are computed in the browser only
 - Do not persist raw answers or individual scores server-side
+- Partner comparison ("PAIR-lite") exists on the result screen: the user's 8 scores become a 16-char code (`src/lib/pair.ts`), the partner pastes it, and the comparison renders in the browser only
+  - Never put scores or codes in a URL (query or `#fragment`): GA4 sends the full `page_location`, which would leak individual scores
+  - Never store or transmit codes; analytics may only receive `result_share` with `method` = `pair_code` / `pair_invite`
+  - No compatibility score or verdict; show per-dimension differences as conversation prompts only
 
 ### TALK
 - Route: `/consult/`
