@@ -238,6 +238,10 @@ Avoid large speculative rewrites.
 Prefer existing/free infrastructure and free-tier-compatible solutions.
 Do not add a new paid SaaS, subscription, or usage-based service without asking the user first.
 
+## Affiliate links
+
+Before adding any affiliate link or ad, read `docs/AFFILIATE.md` (disclosure position, per-program rules, medical-ad restrictions, placement limits).
+
 ## 14. When receiving a new modification request
 
 Before coding:
