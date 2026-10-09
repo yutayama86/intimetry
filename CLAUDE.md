@@ -187,6 +187,11 @@ Recent verification:
 
 If touching analytics, preserve the sensitive-data restrictions above.
 
+Traffic hygiene (added 2026-10-09):
+- `gtag('config', ...)` is sent only when the hostname is `intimetry.com` (or a subdomain), so Cloudflare preview deployments (`*.pages.dev`) and localhost never record data
+- The owner can exclude a browser by opening `https://intimetry.com/?ga_optout=1` once (stored in localStorage); `?ga_optout=0` re-enables it
+- Keep both behaviors when editing `BaseLayout.astro`; the launch quality check still requires the measurement ID and the gtag loader in the built HTML
+
 ## 10. Search / SEO
 
 - Canonical production origin: `https://intimetry.com`

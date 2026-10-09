@@ -59,7 +59,15 @@ const schema = schemaOverride ?? defaultSchema;
           function gtag(){dataLayer.push(arguments);}
           window.gtag = gtag;
           gtag('js', new Date());
-          gtag('config', ga4, { anonymize_ip: true });
+          const isProduction = /(^|\.)intimetry\.com$/.test(location.hostname);
+          let optedOut = false;
+          try {
+            const flag = new URLSearchParams(location.search).get('ga_optout');
+            if (flag === '1') localStorage.setItem('ga_optout', '1');
+            if (flag === '0') localStorage.removeItem('ga_optout');
+            optedOut = localStorage.getItem('ga_optout') === '1';
+          } catch (e) {}
+          if (isProduction && !optedOut) gtag('config', ga4, { anonymize_ip: true });
         </script>
       </>
     )}
