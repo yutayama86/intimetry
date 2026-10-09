@@ -1,0 +1,30 @@
+---
+import { AFFILIATES, type AffiliateId } from '../data/affiliates';
+
+interface Props { id: AffiliateId; placement: string }
+const { id, placement } = Astro.props;
+const affiliate = AFFILIATES[id];
+---
+<aside class="affiliate-card" aria-label="広告">
+  <span class="pr-badge">PR</span>
+  <p class="affiliate-title">{affiliate.title}</p>
+  <p>{affiliate.body}</p>
+  <a class="btn primary" href={affiliate.href} rel="sponsored nofollow noopener" target="_blank" aria-label={`${affiliate.button}(新しいタブで開きます)`} data-affiliate={affiliate.id} data-placement={placement}>{affiliate.button}</a>
+  <p class="affiliate-note">{affiliate.note}</p>
+</aside>
+<script>
+  import { track } from '../lib/analytics';
+  document.querySelectorAll<HTMLAnchorElement>('a[data-affiliate]').forEach((link) => {
+    link.addEventListener('click', () => {
+      track('recommendation_click', { recommendation_id: `affiliate_${link.dataset.affiliate}`, placement: link.dataset.placement || 'unknown' });
+    });
+  });
+</script>
+<style>
+  .affiliate-card { display: grid; gap: 12px; margin: 36px 0; padding: 22px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); }
+  .affiliate-card p { margin: 0; color: var(--muted); }
+  .affiliate-card .affiliate-title { color: var(--text); font-weight: 900; font-size: 1.1rem; }
+  .affiliate-card .btn { justify-self: start; }
+  .affiliate-card .affiliate-note { font-size: .82rem; }
+  .pr-badge { justify-self: start; border: 1px solid var(--accent); color: var(--accent); border-radius: 999px; padding: 1px 9px; font-size: .72rem; font-weight: 900; letter-spacing: .08em; }
+</style>

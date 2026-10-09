@@ -2,6 +2,8 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { ARTICLES, formatDateJa } from '../../../data/articles';
 import { SITE } from '../../../data/site';
+import PrNotice from '../../../components/PrNotice.astro';
+import AffiliateCard from '../../../components/AffiliateCard.astro';
 
 export function getStaticPaths() {
   return ARTICLES.map((article, index) => ({
@@ -50,6 +52,7 @@ const schema = [
     <nav class="breadcrumb" aria-label="パンくずリスト">
       <a href="/">ホーム</a><span aria-hidden="true">›</span><a href="/articles/">読みもの</a>
     </nav>
+    {article.affiliate && <PrNotice />}
     <span class="eyebrow">Journal</span>
     <h1 class="h2">{article.title}</h1>
     <p class="lead">{article.description}</p>
@@ -59,6 +62,7 @@ const schema = [
       if (block.type === 'ul') return <ul>{block.items.map((item) => <li>{item}</li>)}</ul>;
       return <p>{block.text}</p>;
     })}
+    {article.affiliate && <AffiliateCard id={article.affiliate} placement={article.slug} />}
     <p class="disclaimer">この記事は一般的な情報提供であり、医学的・心理学的な診断や治療に代わるものではありません。体調や症状に関わる場合は、医療機関にご相談ください。</p>
     <div class="notice cta-notice">
       <strong>次の一歩</strong><br />

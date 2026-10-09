@@ -1,3 +1,5 @@
+import type { AffiliateId } from './affiliates';
+
 export type ArticleBlock =
   | { type: 'p'; text: string }
   | { type: 'h2'; text: string }
@@ -6,6 +8,7 @@ export type ArticleBlock =
 export type Article = {
   slug: string;
   publishedAt: string;
+  affiliate?: AffiliateId;
   title: string;
   description: string;
   blocks: ArticleBlock[];
@@ -294,6 +297,7 @@ export const ARTICLES: Article[] = [
   {
     slug: 'decline-without-guilt',
     publishedAt: '2026-10-07',
+    affiliate: 'kimochi',
     title: '疲れていて断るときの、罪悪感を減らす伝え方',
     description: '断る側も傷つく。関係を守りながら「今日は難しい」と伝える工夫。',
     blocks: [
@@ -445,6 +449,7 @@ export const ARTICLES: Article[] = [
   {
     slug: 'when-boyfriend-doesnt-initiate',
     publishedAt: '2026-10-08',
+    affiliate: 'kimochi',
     title: '彼氏に求められなくて辛いとき、まず確認したいこと',
     description: '「求められない＝愛されていない」と結論を急がず、気持ちを整理して伝えるためのステップ。',
     blocks: [
@@ -627,6 +632,7 @@ export const ARTICLES: Article[] = [
   {
     slug: 'newlywed-sexless',
     publishedAt: '2026-10-08',
+    affiliate: 'kimochi',
     title: '新婚なのにレス？原因と、責め合わずに話すきっかけ',
     description: '新婚でも触れ合いが減ることはあります。原因を決めつけず、二人で話し始めるための考え方。',
     blocks: [

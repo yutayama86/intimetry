@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 
 const SITE = 'https://intimetry.com';
 
@@ -96,5 +96,32 @@ for (const event of [
 
 const consultSource = read('src/pages/consult/index.astro');
 assert(!consultSource.includes("message:String("), 'Potential consult body sent to analytics');
+
+
+// Affiliate guardrails (docs/AFFILIATE.md): links only on approved pages, PR notice before the title, rel=sponsored, no placeholders.
+const AFFILIATE_ALLOWED_PAGES = new Set([
+  'dist/articles/when-boyfriend-doesnt-initiate/index.html',
+  'dist/articles/decline-without-guilt/index.html',
+  'dist/articles/newlywed-sexless/index.html',
+]);
+const walk = (dir) =>
+  readdirSync(dir).flatMap((name) => {
+    const path = `${dir}/${name}`;
+    return statSync(path).isDirectory() ? walk(path) : [path];
+  });
+for (const path of walk('dist').filter((file) => file.endsWith('.html'))) {
+  const html = read(path);
+  assert(!html.includes('REPLACE_WITH_'), `Placeholder left in build output: ${path}`);
+  const links = html.match(/<a\b[^>]*href="https:\/\/px\.a8\.net[^"]*"[^>]*>/g) || [];
+  if (links.length === 0) continue;
+  assert(AFFILIATE_ALLOWED_PAGES.has(path), `Affiliate link on a page that is not approved: ${path}`);
+  const notice = html.indexOf('class="pr-notice"');
+  const title = html.indexOf('<h1');
+  assert(notice !== -1 && title !== -1 && notice < title, `PR notice must appear before the title: ${path}`);
+  for (const tag of links) {
+    assert(/rel="[^"]*\bsponsored\b[^"]*"/.test(tag), `Affiliate link must have rel=sponsored: ${path}`);
+    assert(!/a8mat=(TEST|PENDING|HFDT\+MHI\+YIP)/.test(tag), `Sample or placeholder affiliate link: ${path}`);
+  }
+}
 
 console.log('Launch quality checks passed.');
