@@ -1,0 +1,39 @@
+---
+import { getPublishableAffiliateOffer } from '../data/affiliateOffers';
+
+interface Props {
+  offerId: string;
+  placement: string;
+  label?: string;
+}
+const { offerId, placement, label = '公式サイトで詳細を見る' } = Astro.props;
+const offer = getPublishableAffiliateOffer(offerId);
+---
+{offer && (
+  <div class="affiliate-offer">
+    <p class="affiliate-label">PR・アフィリエイト広告</p>
+    <a href={offer.landingUrl!} class="btn primary affiliate-cta" target="_blank" rel="sponsored nofollow noopener noreferrer" data-affiliate-offer={offer.id} data-affiliate-provider={offer.provider} data-affiliate-placement={placement}>{label}</a>
+    <p class="affiliate-disclosure">本ページには広告が含まれます。商品・サービスの内容や価格はリンク先でご確認ください。</p>
+  </div>
+)}
+<style>
+.affiliate-offer{margin-block:1.5rem;padding:1rem;border:1px solid var(--line);border-radius:12px}
+.affiliate-label{font-size:.8rem;font-weight:800;margin:0 0 .75rem}
+.affiliate-disclosure{font-size:.78rem;color:var(--muted);margin:.8rem 0 0}
+.affiliate-cta{display:inline-flex}
+</style>
+<script>
+document.addEventListener('click', (event) => {
+  const target = event.target;
+  if (!(target instanceof Element)) return;
+  const anchor = target.closest<HTMLAnchorElement>('a[data-affiliate-offer]');
+  if (!anchor) return;
+  const { affiliateOffer: offerId, affiliateProvider: provider, affiliatePlacement: placement } = anchor.dataset;
+  // Only non-sensitive, static content identifiers are sent. Never include a URL or diagnostic response.
+  if (!offerId || !provider || !placement) return;
+  const analytics = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
+  if (typeof analytics === 'function') {
+    analytics('event', 'affiliate_outbound_click', { offer_id: offerId, provider, placement });
+  }
+});
+</script>
