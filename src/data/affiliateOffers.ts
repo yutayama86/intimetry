@@ -44,16 +44,16 @@ export const affiliateOffers: ReadonlyArray<AffiliateOffer> = [
   {
     id: 'myfans-pending',
     provider: 'myfans',
-    name: 'myfans — 媒体・広告物審査待ち',
+    name: 'myfans — 媒体承認済み・個別案件確認中',
     landingUrl: null,
-    mediaApproved: false,
+    mediaApproved: true,
     approval: 'research',
     creativeApproved: false,
     requiresPrePublicationReview: true,
     publicationReviewed: false,
     disclosure: 'PR',
-    commissionNote: '作品・クリエイターごとの報酬条件と適用ルールを個別に確認する。',
-    verifiedAt: null,
+    commissionNote: '2026-10-14、公式管理画面でサイト・X媒体が有効と確認。個別案件・素材の承認は別途必要。',
+    verifiedAt: '2026-10-14',
   },
 ];
 
