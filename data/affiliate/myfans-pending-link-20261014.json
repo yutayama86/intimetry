@@ -4,9 +4,9 @@
   "publishingMedia": "https://intimetry.com/",
   "affiliateUrl": "https://mfco.link/r/QXG1cUwQps63A7nFjYNVbNVk",
   "linkSource": "Owner supplied generated URL in chat",
-  "destinationStatus": "unverified (external redirect could not be opened)",
-  "targetCreator": null,
-  "targetContent": null,
+  "destinationStatus": "Owner-identified target; URL redirect not independently verified",
+  "targetCreator": "烈",
+  "targetContent": "【本編完全顔出し】【パーソナルトレーナー篠原さん〜（タイトル途中まで、正式名称未確認）",
   "itemPriceJPY": null,
   "actualCommissionRate": null,
   "affiliateTrackingVerified": false,
@@ -14,5 +14,6 @@
   "platformAdReviewVerified": false,
   "approval": "research",
   "publishable": false,
-  "notes": "Do not place live or infer destination until exact creator/item, commission and publication requirements confirmed. Never copy unauthorized thumbnail/video."
+  "notes": "Individual item screen displays approx ¥6,980 and 50% near title, but verify actual item details, redirect and commission before publication. No license for screenshots or thumbnails. Keep unpublished.",
+  "targetMappingSource": "Owner explicitly identified the shared URL as this item in chat on 2026-10-14"
 }
