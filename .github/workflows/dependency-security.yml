@@ -21,6 +21,6 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 22.23.4
-      - run: npm install --package-lock=false --ignore-scripts
+      - run: npm install --package-lock-only --ignore-scripts
       - run: npm audit --omit=dev --audit-level=high
       - run: npm audit --audit-level=critical
