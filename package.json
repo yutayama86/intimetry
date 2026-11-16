@@ -16,7 +16,7 @@
     "test": "node --experimental-strip-types scripts/scoring-smoke.ts"
   },
   "dependencies": {
-    "@astrojs/sitemap": "3.7.4",
+    "@astrojs/sitemap": "3.7.5",
     "astro": "7.3.3"
   },
   "devDependencies": {
